@@ -15,16 +15,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup NDK
-        id: ndk
         uses: android-actions/setup-android@v3
 
       - name: Configure (${matrix.abi})
         run: |
-          NDK="$ANDROID_HOME/ndk/${{ steps.ndk.outputs.ndk-version }}"
+          NDK=$(ls -d "$ANDROID_HOME/ndk/"*/ | head -1)
+          echo "NDK=$NDK" >> "$GITHUB_ENV"
           export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           cmake -B build -S . \
             -G Ninja \
-            -DCMAKE_MAKE_PROGRAM="$NDK/prebuilt/linux-x86_64/bin/make" \
             -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-21 \
@@ -32,7 +31,6 @@ jobs:
 
       - name: Build (${matrix.abi})
         run: |
-          NDK="$ANDROID_HOME/ndk/${{ steps.ndk.outputs.ndk-version }}"
           export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           cmake --build build --config Release -j$(nproc)
 
