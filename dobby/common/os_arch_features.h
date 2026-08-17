@@ -38,7 +38,8 @@ inline void make_memory_readable(void *address, size_t size) {
 #if defined(ANDROID)
   size_t page_size = (size_t)sysconf(_SC_PAGESIZE);
   auto page = (void *)((uintptr_t)address & ~(page_size - 1));
-  mprotect(page, size + (address - page), PROT_READ | PROT_EXEC);
+  size_t offset = (uintptr_t)address - (uintptr_t)page;
+  mprotect(page, size + offset, PROT_READ | PROT_EXEC);
 #endif
 }
 } // namespace android
