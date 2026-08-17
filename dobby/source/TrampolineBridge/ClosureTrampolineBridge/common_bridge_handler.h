@@ -9,6 +9,8 @@ inline asm_func_t closure_bridge_addr = nullptr;
 
 void closure_bridge_init();
 
+asm_func_t get_closure_bridge_addr();
+
 void get_routing_bridge_next_hop(DobbyRegisterContext *ctx, void *address);
 
 void set_routing_bridge_next_hop(DobbyRegisterContext *ctx, void *address);
