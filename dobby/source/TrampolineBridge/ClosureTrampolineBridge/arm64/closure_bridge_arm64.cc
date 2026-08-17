@@ -149,4 +149,8 @@ void closure_bridge_init() {
 #endif
 }
 
+asm_func_t get_closure_bridge_addr() {
+  return closure_bridge_addr;
+}
+
 #endif
