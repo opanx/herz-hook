@@ -93,6 +93,8 @@ cdecl(closure_bridge_asm_end):
 
 .data
 .align 8
+.globl cdecl(common_closure_bridge_handler_addr)
+.type cdecl(common_closure_bridge_handler_addr), %object
 common_closure_bridge_handler_addr:
 .quad cdecl(common_closure_bridge_handler)
 #endif
