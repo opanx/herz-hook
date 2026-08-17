@@ -14,12 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup NDK
-        uses: android-actions/setup-android@v3
+      - name: Setup NDK r25b
+        run: |
+          echo "y" | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;25.2.9519653" >/dev/null 2>&1
+          echo "NDK=$ANDROID_HOME/ndk/25.2.9519653" >> "$GITHUB_ENV"
 
       - name: Configure (${matrix.abi})
         run: |
-          NDK=$(ls -d "$ANDROID_HOME/ndk/"*/ | head -1)
+          NDK="$NDK"
           echo "NDK=$NDK" >> "$GITHUB_ENV"
           export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           cmake -B build -S . \
