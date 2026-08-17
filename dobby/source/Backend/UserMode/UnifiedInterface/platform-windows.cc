@@ -4,7 +4,7 @@
 
 #include "logging/logging.h"
 #include "logging/check_logging.h"
-#include "PlatformUnifiedInterface/platform.h"
+#include "UnifiedInterface/platform.h"
 
 int GetProtectionFromMemoryPermission(MemoryPermission access) {
   if (kReadWriteExecute == access)
