@@ -1,0 +1,38 @@
+name: build-herz-hook
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        abi: [ arm64-v8a, armeabi-v7a ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup NDK
+        id: ndk
+        uses: android-actions/setup-android@v3
+
+      - name: Configure (${matrix.abi})
+        run: |
+          NDK="$ANDROID_HOME/ndk/${{ steps.ndk.outputs.ndk-version }}"
+          cmake -B build -S . \
+            -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=${{ matrix.abi }} \
+            -DANDROID_PLATFORM=android-21 \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (${matrix.abi})
+        run: cmake --build build --config Release -j$(nproc)
+
+      - name: Upload artifact (${matrix.abi})
+        uses: actions/upload-artifact@v4
+        with:
+          name: herz-hook-${{ matrix.abi }}
+          path: build/libherz_hook.so
+          if-no-files-found: error
