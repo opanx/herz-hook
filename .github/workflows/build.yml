@@ -21,14 +21,20 @@ jobs:
       - name: Configure (${matrix.abi})
         run: |
           NDK="$ANDROID_HOME/ndk/${{ steps.ndk.outputs.ndk-version }}"
+          export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           cmake -B build -S . \
+            -G Ninja \
+            -DCMAKE_MAKE_PROGRAM="$NDK/prebuilt/linux-x86_64/bin/make" \
             -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-21 \
             -DCMAKE_BUILD_TYPE=Release
 
       - name: Build (${matrix.abi})
-        run: cmake --build build --config Release -j$(nproc)
+        run: |
+          NDK="$ANDROID_HOME/ndk/${{ steps.ndk.outputs.ndk-version }}"
+          export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
+          cmake --build build --config Release -j$(nproc)
 
       - name: Upload artifact (${matrix.abi})
         uses: actions/upload-artifact@v4
