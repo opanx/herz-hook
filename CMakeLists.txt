@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD 11)
 set(DOBBY_BUILD_EXAMPLE OFF CACHE BOOL "" FORCE)
 set(DOBBY_BUILD_TEST OFF CACHE BOOL "" FORCE)
 set(DOBBY_DEBUG OFF CACHE BOOL "" FORCE)
+set(Plugin.SymbolResolver OFF CACHE BOOL "" FORCE)
 add_subdirectory(dobby)
 
 add_library(herz_hook SHARED herz_hook.c)
